@@ -4,14 +4,11 @@ import { FiGithub, FiZap } from 'react-icons/fi';
 
 export default function Navbar() {
    const [scrolled, setScrolled] = useState(false);
-   const [atTop, setAtTop] = useState(true);
 
    useEffect(() => {
       const handleScroll = () => {
          const isScrolled = window.scrollY > 10;
-         const isAtTop = window.scrollY < 50;
          setScrolled(isScrolled);
-         setAtTop(isAtTop);
       };
 
       window.addEventListener('scroll', handleScroll);
