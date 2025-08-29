@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+const api = axios.create({
+   baseURL: import.meta.env.VITE_API_BASE,
+});
+
 export type Review = {
    id: number;
    author: string;
@@ -31,29 +35,26 @@ export type GetReviewsResponse = {
 
 export const reviewsApi = {
    async fetchProducts() {
-      return axios
-         .get<ProductsResponse>('/api/products')
-         .then((res) => res.data);
+      const { data } = await api.get<ProductsResponse>('/products');
+      return data;
    },
 
    async fetchReviews(productId: number) {
-      const { data } = await axios.get<GetReviewsResponse>(
-         `/api/products/${productId}/reviews`
+      const { data } = await api.get<GetReviewsResponse>(
+         `/products/${productId}/reviews`
       );
       return data;
    },
 
    async summarizeReviews(productId: number) {
-      return axios
-         .post<SummarizeResponse>(
-            `/api/products/${productId}/reviews/summarize`
-         )
+      return api
+         .post<SummarizeResponse>(`/products/${productId}/reviews/summarize`)
          .then((res) => res.data);
    },
 
    async streamSummary(productId: number, onChunk: (text: string) => void) {
       const response = await fetch(
-         `/api/products/${productId}/reviews/summarize-stream`
+         `${import.meta.env.VITE_API_BASE}/products/${productId}/reviews/summarize-stream`
       );
 
       if (!response.body) throw new Error('No response body from server');
